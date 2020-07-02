@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>PA County Death Data</title>
+</head>
+<body>
+
+<form action="/death-chart">
+    <select name="county" id="county">
+        {% for county in counties %}
+            <option value="{{ county }}">{{ county }}</option>
+        {% endfor %}
+    </select>
+    <input type="submit">
+</form>
+
+</body>
+</html>

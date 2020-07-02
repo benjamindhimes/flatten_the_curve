@@ -1,0 +1,6 @@
+requests
+quart
+hypercorn
+pandas
+pyyaml
+plotly
