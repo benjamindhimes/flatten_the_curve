@@ -1,3 +1,4 @@
+import asyncio
 import datetime
 import os
 
@@ -58,7 +59,12 @@ def convert_ts_in_obj(obj: dict) -> dict:
 
 
 def render_plot(county_data: pd.DataFrame, county_name: str) -> plotly.graph_objs.Figure:
-    fig = px.line(county_data, y="deaths", x="date", title=f"{county_name} County Death Data")
+    max_single_day_deaths = max(county_data["deaths"])
+    fig = px.line(county_data,
+                  y="deaths",
+                  x="date",
+                  title=f"{county_name} County Death Data",
+                  range_y=[0, 10] if max_single_day_deaths < 11 else [0, max_single_day_deaths])
     return fig
 
 
@@ -68,11 +74,11 @@ def show_plot(figure: plotly.graph_objs.Figure) -> None:
 
 async def play_with_me() -> None:
     county = "Allegheny"
-    county_data_ = get_county_data(county)
+    county_data_ = await get_county_data(county)
     county_data_df = pd.DataFrame([convert_ts_in_obj(x["attributes"]) for x in county_data_["features"]])
     plot = render_plot(county_data_df, county)
     show_plot(plot)
 
 
 if __name__ == '__main__':
-    app.run("0.0.0.0:8000", debug=False)
+    asyncio.run(play_with_me())
