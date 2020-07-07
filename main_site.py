@@ -32,7 +32,7 @@ async def index_page():
 @app.route("/death-chart")
 async def death_chart():
     county = quart.request.args.get("county")
-    if not county:
+    if not county or county not in COUNTIES:
         return quart.abort(404)
     county_data_ = await get_county_data(county)
     county_data_df = pd.DataFrame([convert_ts_in_obj(x["attributes"]) for x in county_data_["features"]])
@@ -46,6 +46,11 @@ async def death_chart():
                                        graph=quart.Markup(plot.to_html()),
                                        county=county,
                                        death_average=death_average)
+
+
+@app.errorhandler(404)
+async def not_found(_):
+    return "The requested data was not found."
 
 
 async def get_county_data(county_name: str):
