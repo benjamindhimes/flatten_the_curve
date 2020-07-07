@@ -35,8 +35,12 @@ async def death_chart():
         return quart.abort(404)
     county_data_ = await get_county_data(county)
     county_data_df = pd.DataFrame([convert_ts_in_obj(x["attributes"]) for x in county_data_["features"]])
+    death_average = sum(x["attributes"]["deaths"] for x in county_data_["features"][-7:]) / 7
     plot = render_plot(county_data_df, county)
-    return plot.to_html()
+    return await quart.render_template("display.html",
+                                       graph=quart.Markup(plot.to_html()),
+                                       county=county,
+                                       death_average=death_average)
 
 
 async def get_county_data(county_name: str):
