@@ -129,7 +129,8 @@ def render_complex_plot(death_data: list, cases_data: list, name: str):
         secondary_y=True
     )
     fig.update_layout(
-        title_text=f"{name.capitalize()} County Death/Cases Data"
+        title_text=f"{name.capitalize()} County Death/Cases Data",
+        yaxis={"tickformat": ",d"}
     )
     fig.update_xaxes(title_text="Date")
     fig.update_yaxes(title_text="Daily Deaths", secondary_y=False)
