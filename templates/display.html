@@ -5,6 +5,17 @@
     <meta charset="UTF-8">
     <title>{{ county }} County Death Data</title>
 </head>
+<style>
+.footer {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  background-color: red;
+  color: white;
+  text-align: center;
+}
+</style>
 <body>
 
 <div class="w3-container">
@@ -15,6 +26,10 @@
     <div class="row">
         <p>Rolling Death Daily Average for Previous Seven Days: {{ death_average }}</p>
     </div>
+</div>
+
+<div class="footer">
+  <p>Death data is based on the date of death as reported to EDRS. Death counts for prior dates will change as additional death records are registered or amended.</p>
 </div>
 
 </body>
