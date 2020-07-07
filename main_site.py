@@ -1,5 +1,6 @@
 import asyncio
 import datetime
+from decimal import Decimal
 import os
 
 import pandas as pd
@@ -35,7 +36,11 @@ async def death_chart():
         return quart.abort(404)
     county_data_ = await get_county_data(county)
     county_data_df = pd.DataFrame([convert_ts_in_obj(x["attributes"]) for x in county_data_["features"]])
-    death_average = sum(x["attributes"]["deaths"] for x in county_data_["features"][-7:]) / 7
+    death_average = Decimal(
+        Decimal(
+            sum(x["attributes"]["deaths"] for x in county_data_["features"][-7:])
+        ) / 7
+    ).quantize(Decimal("0.01"))
     plot = render_plot(county_data_df, county)
     return await quart.render_template("display.html",
                                        graph=quart.Markup(plot.to_html()),
@@ -55,7 +60,7 @@ async def get_county_data(county_name: str):
 
 
 def timestamp_to_date(ts: int) -> str:
-    return datetime.datetime.fromtimestamp(ts / 1000).strftime('%Y-%m-%d')
+    return datetime.datetime.fromtimestamp(Decimal(ts) / 1000).strftime('%Y-%m-%d')
 
 
 def convert_ts_in_obj(obj: dict) -> dict:
